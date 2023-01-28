@@ -1,0 +1,131 @@
+CREATE DATABASE SklepOdziezowy;
+GO
+USE SklepOdziezowy;
+GO
+
+
+CREATE TABLE Klienci (
+    KlientID INT PRIMARY KEY IDENTITY(1,1),
+    Imie NVARCHAR(50) NOT NULL,
+    Nazwisko NVARCHAR(50) NOT NULL,
+    Adres NVARCHAR(255) NOT NULL,
+    Telefon NVARCHAR(20) NOT NULL,
+    Email NVARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE Pracownicy (
+    PracownikID INT PRIMARY KEY IDENTITY(1,1),
+    Imie NVARCHAR(50) NOT NULL,
+    Nazwisko NVARCHAR(50) NOT NULL,
+    Adres NVARCHAR(255) NOT NULL,
+    Telefon NVARCHAR(20) NOT NULL,
+    Email NVARCHAR(255) NOT NULL,
+    Pensja DECIMAL(10,2) NOT NULL,
+    DataZatrudnienia DATE NOT NULL
+);
+
+CREATE TABLE Kategorie (
+    KategoriaID INT PRIMARY KEY IDENTITY(1,1),
+    Nazwa NVARCHAR(255) NOT NULL,
+    Opis NVARCHAR(MAX) NOT NULL
+);
+
+
+CREATE TABLE Produkty (
+    ProduktID INT PRIMARY KEY IDENTITY(1,1),
+    Nazwa NVARCHAR(255) NOT NULL,
+    Opis NVARCHAR(MAX) NOT NULL,
+    Cena DECIMAL(10,2) NOT NULL,
+    Ilosc INT NOT NULL,
+    KategoriaID INT NOT NULL,
+    FOREIGN KEY (KategoriaID) REFERENCES Kategorie(KategoriaID)
+);
+
+
+
+CREATE TABLE Zamowienia (
+    ZamowienieID INT PRIMARY KEY IDENTITY(1,1),
+    KlientID INT NOT NULL,
+    PracownikID INT NOT NULL,
+    DataZamowienia DATE NOT NULL,
+    FOREIGN KEY (KlientID) REFERENCES Klienci(KlientID),
+    FOREIGN KEY (PracownikID) REFERENCES Pracownicy(PracownikID)
+);
+
+
+CREATE TABLE SzczegolyZamowienia (
+    SzczegolyZamowieniaID INT PRIMARY KEY IDENTITY(1,1),
+    ZamowienieID INT NOT NULL,
+    ProduktID INT NOT NULL,
+    Ilosc INT NOT NULL,
+    Cena DECIMAL(10,2)
+	); 
+
+CREATE TABLE Promocje (
+IdPromocji INT PRIMARY KEY IDENTITY,
+Nazwa NVARCHAR(50) NOT NULL,
+Opis NVARCHAR(MAX) NOT NULL,
+DataOd DATE NOT NULL,
+DataDo DATE NOT NULL,
+Procent INT NOT NULL,
+Aktywna BIT NOT NULL
+);
+
+
+
+
+INSERT INTO Klienci (Imie, Nazwisko, Adres, Telefon, Email)
+VALUES ('Jan', 'Kowalski', 'ul. Nowa 5, Warszawa', '555-555-555', 'jan.kowalski@gmail.com'),
+('Anna', 'Nowak', 'ul. Wiejska 7, Kraków', '555-555-556', 'anna.nowak@gmail.com'),
+('Tomasz', 'Wiśniewski', 'ul. Słoneczna 3, Poznań', '555-555-557', 'tomasz.wisniewski@gmail.com');
+
+INSERT INTO Pracownicy (Imie, Nazwisko, Adres, Telefon, Email, Pensja, DataZatrudnienia)
+VALUES ('Adam', 'Malinowski', 'ul. Parkowa 2, Warszawa', '555-555-558', 'adam.malinowski@gmail.com', 3000.00, '2022-01-01'),
+('Magdalena', 'Kowalczyk', 'ul. Kwiatowa 5, Kraków', '555-555-559', 'magdalena.kowalczyk@gmail.com', 3500.00, '2022-02-01'),
+('Andrzej', 'Gołota', 'ul. Polna 8, Poznań', '555-555-560', 'andrzej.golota@gmail.com', 4000.00, '2022-03-01');
+
+INSERT INTO Kategorie (Nazwa, Opis)
+VALUES ('Odzież damska', 'Kategoria zawierająca odzież damską'),
+('Odzież męska', 'Kategoria zawierająca odzież męską'),
+('Odzież dziecięca', 'Kategoria zawierająca odzież dla dzieci');
+
+INSERT INTO Produkty (Nazwa, Opis, Cena, Ilosc, KategoriaID)
+VALUES ('Sukienka letnia', 'Sukienka w kwiaty, rozmiar S', 100.00, 10, 1),
+('T-shirt męski', 'T-shirt z nadrukiem, rozmiar L', 50.00, 20, 2),
+('Bluza dziecięca', 'Bluza z kapturem, rozmiar 12', 35.00, 15, 3);
+
+INSERT INTO Zamowienia (KlientID, PracownikID, DataZamowienia)
+VALUES (1, 1, '2022-04-01'),
+(2, 2, '2022-05-01'),
+(3, 3, '2022-06-01');
+
+INSERT INTO SzczegolyZamowienia (ZamowienieID, ProduktID, Ilosc, Cena)
+VALUES (1, 1, 2, 50.00),
+(2, 2, 1, 25.00),
+(3, 3, 3, 105.00);
+
+INSERT INTO Promocje (Nazwa, Opis, DataOd, DataDo, Procent, Aktywna)
+VALUES ('Promocja letnia', 'Zniżka 20% na wszystkie letnie ubrania', '2023-06-01', '2023-08-31', 20, 0);
+
+INSERT INTO Promocje (Nazwa, Opis, DataOd, DataDo, Procent, Aktywna)
+VALUES ('Promocja na walentynki', 'Zniżka 15% na wszystkie produkty dla par', '2023-02-01', '2023-02-14', 15, 0);
+
+INSERT INTO Promocje (Nazwa, Opis, DataOd, DataDo, Procent, Aktywna)
+VALUES ('Promocja na wiosnę', 'Zniżka 10% na wszystkie produkty w kolorze zielonym', '2023-03-01', '2023-05-31', 10, 0);
+
+INSERT INTO Promocje (Nazwa, Opis, DataOd, DataDo, Procent, Aktywna)
+VALUES ('Promocja na zakupy grupowe', 'Zniżka 5% przy zakupie więcej niż 5 produktów', '2022-01-01', '2022-12-31', 5, 0);
+
+INSERT INTO Promocje (Nazwa, Opis, DataOd, DataDo, Procent, Aktywna)
+VALUES ('Promocja na nowości', 'Zniżka 15% na wszystkie nowości w sklepie', '2022-01-01', '2022-12-31', 15, 0);
+
+
+
+Select * FROM Klienci;
+Select * FROM Pracownicy
+Select * FROM Kategorie;
+Select * FROM Produkty;
+Select * FROM Zamowienia;
+Select * FROM SzczegolyZamowienia;
+Select * FROM Promocje;
